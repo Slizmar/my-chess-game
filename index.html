@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Chess Game</title>
+  <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>My Chess Game</h1>
+  <div class="settings-container">
+    <button id="settingsBtn">Settings</button>
+    <div id="settingsMenu" class="settings-menu">
+      <button id="boardThemeBtn" class="menu-button">Board Theme</button>
+      <div id="colorOptions" class="theme-options">
+        <button id="defaultThemeBtn">Default</button>
+        <button id="woodenThemeBtn">Wooden</button>
+        <button id="blueThemeBtn">Blue</button>
+        <button id="greenThemeBtn">Green</button>
+        <button id="glacialThemeBtn">Glacial</button>
+        <button id="redThemeBtn">Red</button>
+        <button id="magentaThemeBtn">Magenta</button>
+        <button id="grapeThemeBtn">Grape</button>
+      </div>
+    </div>
+  </div>
+  <div id="game-mode-menu" style="text-align: center; margin: 50px;">
+    <h2>Choose Game Mode</h2>
+    <button id="singleplayerBtn">Singleplayer</button>
+    <button id="multiplayerBtn">Multiplayer</button>
+    <button id="hardcoreBtn">Hardcore</button>
+  </div>
+  <div id="hardcore-menu" style="text-align: center; margin: 50px; display: none;">
+    <h2>Hardcore Mode</h2>
+    <p>Rooks instead of Queens. New game must always be created.</p>
+    <button id="hardcoreSingleplayerBtn">Singleplayer</button>
+    <button id="hardcoreMultiplayerBtn">Multiplayer</button>
+  </div>
+  <div id="multiplayer-ui" style="margin-bottom: 20px; display: none;">
+    <h2>Multiplayer Game</h2>
+    <div id="lobby-ui">
+        <button id="createGameBtn">Create New Game</button>
+        <div style="margin-top: 10px;">
+            <input type="text" id="gameIdInput" placeholder="Enter Game ID">
+            <button id="joinGameBtn">Join Game</button>
+        </div>
+    </div>
+    <div id="game-info" style="display: none;">
+      <p>Your Game ID: <span id="displayGameId"></span></p>
+      <p>Your Color: <span id="displayPlayerColor"></span></p>
+      <p><span id="gameStatus">Waiting for opponent...</span></p>
+    </div>
+  </div>
+  <div id="board-container" style="display: none;">
+    <div id="board" style="width: 400px; margin: auto;"></div>
+    <p>Status: <span id="status"></span> <span id="hardcore-status"></span></p>
+  </div>
+  <div id="win-message-overlay" class="hidden">
+      <h2 id="win-message-text"></h2>
+  </div>
+  <div id="hardcore-overlay" class="hidden"></div>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://unpkg.com/chess.js@0.10.3/chess.js"></script>
+  <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

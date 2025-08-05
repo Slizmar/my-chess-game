@@ -1,0 +1,113 @@
+ body {
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+#board-container {
+    margin: 20px auto;
+}
+#hardcore-status {
+    color: #990000;
+    font-weight: bold;
+    display: none;
+}
+#win-message-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+#win-message-overlay.hidden {
+    display: none;
+}
+#hardcore-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(200, 0, 0, 0.2);
+    z-index: 10;
+    display: none;
+    pointer-events: none; /* FIX: This allows clicks to pass through */
+}
+/* Settings Menu */
+.settings-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+#settingsBtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.settings-menu {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    width: 200px;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    display: none;
+}
+.settings-menu.show {
+    display: block;
+}
+.menu-button {
+    width: 100%;
+    padding: 10px;
+    background-color: white;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+}
+.theme-options button {
+  /* Existing styles */
+  width: 100%;
+  padding: 8px 10px;
+  background-color: white;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  /* New style to ensure text is always visible */
+  color: black;
+}
+.theme-options.show {
+    display: block;
+}
+.theme-options button {
+    width: 100%;
+    padding: 8px 10px;
+    background-color: white;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+}
+.selected-theme-btn {
+  background-color: #27ae60; /* The green background */
+  color: rgb(0, 0, 0); /* The white text color */
+  border: 1px solid #1a8f4c; /* Optional: A slightly darker green border for emphasis */
+}
+/* New: Styling for the main game mode buttons */
+#game-mode-menu button, #hardcore-menu button {
+    font-size: 2em;
+    padding: 15px 30px;
+    margin: 10px;
+    border: 2px solid #ccc;
+    background-color: #f0f0f0;
+    cursor: pointer;
+} 
