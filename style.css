@@ -1,4 +1,4 @@
- body {
+body {
     font-family: sans-serif;
     text-align: center;
     background-color: #f0f0f0;
@@ -76,15 +76,15 @@
     cursor: pointer;
 }
 .theme-options button {
-  /* Existing styles */
-  width: 100%;
-  padding: 8px 10px;
-  background-color: white;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-  /* New style to ensure text is always visible */
-  color: black;
+    /* Existing styles */
+    width: 100%;
+    padding: 8px 10px;
+    background-color: white;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    /* New style to ensure text is always visible */
+    color: black;
 }
 .theme-options.show {
     display: block;
@@ -98,16 +98,16 @@
     cursor: pointer;
 }
 .selected-theme-btn {
-  background-color: #27ae60; /* The green background */
-  color: rgb(0, 0, 0); /* The white text color */
-  border: 1px solid #1a8f4c; /* Optional: A slightly darker green border for emphasis */
+    background-color: #27ae60; /* The green background */
+    color: rgb(0, 0, 0); /* The white text color */
+    border: 1px solid #1a8f4c; /* Optional: A slightly darker green border for emphasis */
 }
 /* New: Styling for the main game mode buttons */
-#game-mode-menu button, #hardcore-menu button {
+#game-mode-menu button, #hardcore-menu button, #chaos-menu button {
     font-size: 2em;
     padding: 15px 30px;
     margin: 10px;
     border: 2px solid #ccc;
     background-color: #f0f0f0;
     cursor: pointer;
-} 
+}

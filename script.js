@@ -4,6 +4,7 @@ let myGameId = null;
 let opponentJoined = false;
 let isMultiplayer = false;
 let isHardcore = false;
+let isChaos = false;
 let socket = null;
 
 // === UI Elements ===
@@ -11,9 +12,13 @@ const gameModeMenu = document.getElementById('game-mode-menu');
 const singleplayerBtn = document.getElementById('singleplayerBtn');
 const multiplayerBtn = document.getElementById('multiplayerBtn');
 const hardcoreBtn = document.getElementById('hardcoreBtn');
+const chaosBtn = document.getElementById('chaosBtn');
 const hardcoreMenu = document.getElementById('hardcore-menu');
 const hardcoreSingleplayerBtn = document.getElementById('hardcoreSingleplayerBtn');
 const hardcoreMultiplayerBtn = document.getElementById('hardcoreMultiplayerBtn');
+const chaosMenu = document.getElementById('chaos-menu');
+const chaosSingleplayerBtn = document.getElementById('chaosSingleplayerBtn');
+const chaosMultiplayerBtn = document.getElementById('chaosMultiplayerBtn');
 const multiplayerUi = document.getElementById('multiplayer-ui');
 const boardContainer = document.getElementById('board-container');
 const winMessageOverlay = document.getElementById('win-message-overlay');
@@ -44,6 +49,8 @@ createGameBtn.disabled = true;
 joinGameBtn.disabled = true;
 
 const HARDCORE_FEN = 'rnbrkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBRKBNR w KQkq - 0 1';
+const CHAOS_BOUNDARY_SQUARES = ['a1', 'a8', 'h1', 'h8', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7'];
+
 
 function setHardcoreUi(isHardcoreMode) {
     if (isHardcoreMode) {
@@ -61,6 +68,7 @@ function setHardcoreUi(isHardcoreMode) {
 singleplayerBtn.addEventListener('click', () => {
     isMultiplayer = false;
     isHardcore = false;
+    isChaos = false;
     gameModeMenu.style.display = 'none';
     multiplayerUi.style.display = 'none';
     boardContainer.style.display = 'block';
@@ -70,12 +78,15 @@ singleplayerBtn.addEventListener('click', () => {
     board.orientation('white');
     setHardcoreUi(false);
     updateStatus();
+    applyTheme('default');
+    updateSelectedButton(defaultThemeBtn);
 });
 
 multiplayerBtn.addEventListener('click', () => {
     console.log("Multiplayer button clicked. Initializing multiplayer...");
     isMultiplayer = true;
     isHardcore = false;
+    isChaos = false;
     gameModeMenu.style.display = 'none';
     multiplayerUi.style.display = 'block';
     boardContainer.style.display = 'block';
@@ -85,6 +96,8 @@ multiplayerBtn.addEventListener('click', () => {
     updateStatus();
     setHardcoreUi(false);
     initMultiplayer();
+    applyTheme('default');
+    updateSelectedButton(defaultThemeBtn);
 });
 
 hardcoreBtn.addEventListener('click', () => {
@@ -95,6 +108,7 @@ hardcoreBtn.addEventListener('click', () => {
 hardcoreSingleplayerBtn.addEventListener('click', () => {
     isMultiplayer = false;
     isHardcore = true;
+    isChaos = false;
     hardcoreMenu.style.display = 'none';
     boardContainer.style.display = 'block';
     winMessageOverlay.classList.add('hidden');
@@ -103,12 +117,15 @@ hardcoreSingleplayerBtn.addEventListener('click', () => {
     board.orientation('white');
     setHardcoreUi(true);
     updateStatus();
+    applyTheme('default');
+    updateSelectedButton(defaultThemeBtn);
 });
 
 hardcoreMultiplayerBtn.addEventListener('click', () => {
     console.log("Hardcore Multiplayer button clicked. Initializing multiplayer...");
     isMultiplayer = true;
     isHardcore = true;
+    isChaos = false;
     hardcoreMenu.style.display = 'none';
     multiplayerUi.style.display = 'block';
     boardContainer.style.display = 'block';
@@ -117,6 +134,49 @@ hardcoreMultiplayerBtn.addEventListener('click', () => {
     board.position('start');
     updateStatus();
     setHardcoreUi(true);
+    createGameBtn.disabled = false;
+    joinGameBtn.disabled = true;
+    initMultiplayer();
+    applyTheme('default');
+    updateSelectedButton(defaultThemeBtn);
+});
+
+chaosBtn.addEventListener('click', () => {
+    gameModeMenu.style.display = 'none';
+    chaosMenu.style.display = 'block';
+});
+
+chaosSingleplayerBtn.addEventListener('click', () => {
+    isMultiplayer = false;
+    isHardcore = false;
+    isChaos = true;
+    chaosMenu.style.display = 'none';
+    boardContainer.style.display = 'block';
+    winMessageOverlay.classList.add('hidden');
+    game.reset();
+    board.position('start');
+    board.orientation('white');
+    setHardcoreUi(false);
+    applyTheme('red');
+    updateSelectedButton(redThemeBtn);
+    updateStatus();
+});
+
+chaosMultiplayerBtn.addEventListener('click', () => {
+    console.log("Chaos Multiplayer button clicked. Initializing multiplayer...");
+    isMultiplayer = true;
+    isHardcore = false;
+    isChaos = true;
+    chaosMenu.style.display = 'none';
+    multiplayerUi.style.display = 'block';
+    boardContainer.style.display = 'block';
+    winMessageOverlay.classList.add('hidden');
+    game.reset();
+    board.position('start');
+    updateStatus();
+    setHardcoreUi(false);
+    applyTheme('red');
+    updateSelectedButton(redThemeBtn);
     createGameBtn.disabled = false;
     joinGameBtn.disabled = true;
     initMultiplayer();
@@ -133,8 +193,10 @@ function initMultiplayer() {
     socket.onopen = () => {
         console.log('Connected to WebSocket server!');
         createGameBtn.disabled = false;
-        if (!isHardcore) {
+        if (!isHardcore && !isChaos) {
             joinGameBtn.disabled = false;
+        } else {
+            joinGameBtn.disabled = true;
         }
         console.log("Multiplayer buttons enabled.");
     };
@@ -175,12 +237,22 @@ function initMultiplayer() {
             opponentJoined = true;
             updateStatus();
 
-            if (game.fen() === HARDCORE_FEN) {
+            if (payload.isHardcore) {
                 isHardcore = true;
+                isChaos = false;
                 setHardcoreUi(true);
+                applyTheme('default');
+            } else if (payload.isChaos) {
+                isHardcore = false;
+                isChaos = true;
+                setHardcoreUi(false);
+                applyTheme('red');
+                updateSelectedButton(redThemeBtn);
             } else {
                 isHardcore = false;
+                isChaos = false;
                 setHardcoreUi(false);
+                applyTheme('default');
             }
             
         } else if (type === 'gameMove') {
@@ -218,7 +290,7 @@ createGameBtn.addEventListener('click', () => {
     console.log("Create New Game button clicked.");
     if (socket && socket.readyState === WebSocket.OPEN) {
         console.log("Sending 'createGame' message to server.");
-        socket.send(JSON.stringify({ type: 'createGame', payload: { hardcore: isHardcore } }));
+        socket.send(JSON.stringify({ type: 'createGame', payload: { hardcore: isHardcore, chaos: isChaos } }));
     } else {
         console.error("Socket not open. Current state:", socket.readyState);
     }
@@ -268,6 +340,21 @@ function onDrop(source, target) {
         if (move === null) {
             return 'snapback';
         }
+
+        // Chaos mode logic for singleplayer
+        if (isChaos) {
+            if (CHAOS_BOUNDARY_SQUARES.includes(target)) {
+                const piece = move.piece;
+                if (piece === 'q' || piece === 'n') {
+                    const newPiece = {
+                        type: 'p',
+                        color: move.color
+                    };
+                    game.put(newPiece, target);
+                }
+            }
+        }
+        
         board.position(game.fen());
         updateStatus();
     }
