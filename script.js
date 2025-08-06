@@ -128,7 +128,7 @@ function initMultiplayer() {
         socket.close();
     }
     console.log("Attempting to connect to WebSocket...");
-    socket = new WebSocket('ws://localhost:8080');
+    socket = new WebSocket('https://determinationchess.onrender.com');
 
     socket.onopen = () => {
         console.log('Connected to WebSocket server!');
